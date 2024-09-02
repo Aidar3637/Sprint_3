@@ -1,17 +1,9 @@
 import pytest
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import random
 import string
-
-@pytest.fixture(scope="session")
-def driver():
-    driver = webdriver.Chrome()
-    driver.get("https://stellarburgers.nomoreparties.site/register")
-    yield driver
-    driver.quit()
+from locators import Locators
 
 def generate_random_string(length=8):
     """Генерирует случайную строку из букв и цифр."""
@@ -22,25 +14,27 @@ def test_registration_flow(driver):
     random_name = generate_random_string()
     random_email = f"{random_name}@yandex.ru"
 
+    driver.get("https://stellarburgers.nomoreparties.site/register")
+
     # 1. Успешная регистрация
-    WebDriverWait(driver, 4).until(
-        EC.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/main/div/form/fieldset[1]/div/div//input'))
+    WebDriverWait(driver, 3).until(
+        EC.visibility_of_element_located(Locators.NAME_INPUT)
     ).send_keys(random_name)
 
-    WebDriverWait(driver, 4).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/fieldset[2]/div/div//input'))
+    WebDriverWait(driver, 3).until(
+        EC.visibility_of_element_located(Locators.EMAIL_INPUT)
     ).send_keys(random_email)
 
-    WebDriverWait(driver, 4).until(
-        EC.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/main/div/form/fieldset[3]/div/div//input'))
+    WebDriverWait(driver, 3).until(
+        EC.visibility_of_element_located(Locators.PASSWORD_INPUT)
     ).send_keys("password123")
 
-    WebDriverWait(driver, 4).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[text()='Зарегистрироваться']"))
+    WebDriverWait(driver, 3).until(
+        EC.element_to_be_clickable(Locators.REGISTER_BUTTON)
     ).click()
 
-    assert WebDriverWait(driver, 8).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/button'))
+    assert WebDriverWait(driver, 3).until(
+        EC.visibility_of_element_located(Locators.LOGIN_BUTTON_FORM)
     )
 
     # Завершаем успешную регистрацию и начинаем новую проверку
@@ -51,25 +45,25 @@ def test_registration_flow(driver):
     random_name = generate_random_string()
     random_email = f"{random_name}@yandex.ru"
 
-    WebDriverWait(driver, 4).until(
-        EC.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/main/div/form/fieldset[1]/div/div//input'))
+    WebDriverWait(driver, 3).until(
+        EC.visibility_of_element_located(Locators.NAME_INPUT)
     ).send_keys(random_name)
 
-    WebDriverWait(driver, 4).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/fieldset[2]/div/div//input'))
+    WebDriverWait(driver, 3).until(
+        EC.visibility_of_element_located(Locators.EMAIL_INPUT)
     ).send_keys(random_email)
 
-    WebDriverWait(driver, 4).until(
-        EC.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/main/div/form/fieldset[3]/div/div//input'))
+    WebDriverWait(driver, 3).until(
+        EC.visibility_of_element_located(Locators.PASSWORD_INPUT)
     ).send_keys("short")
 
-    WebDriverWait(driver, 4).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[text()='Зарегистрироваться']"))
+    WebDriverWait(driver, 3).until(
+        EC.element_to_be_clickable(Locators.REGISTER_BUTTON)
     ).click()
 
     # Проверка наличия ошибки
-    error_message = WebDriverWait(driver, 4).until(
-        EC.visibility_of_element_located((By.CLASS_NAME, 'input__error'))
+    error_message = WebDriverWait(driver, 3).until(
+        EC.visibility_of_element_located(Locators.ERROR_MESSAGE)
     )
     assert error_message.is_displayed()
 

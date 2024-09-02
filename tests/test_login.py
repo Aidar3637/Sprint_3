@@ -1,132 +1,137 @@
-import pytest
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from locators import Locators
 
-
-@pytest.fixture
-def driver():
+def test_login_from_main_page():
     driver = webdriver.Chrome()
-    yield driver
-    driver.quit()
+    try:
+        # Переход на главную страницу
+        driver.get("https://stellarburgers.nomoreparties.site/")
 
+        # Ожидание появления и клик по кнопке "Войти в аккаунт"
+        WebDriverWait(driver, 3).until(
+            EC.element_to_be_clickable(Locators.LOGIN_BUTTON_ACCOUNT)
+        ).click()
 
-def test_login_from_main_page(driver):
-    # Переход на главную страницу
-    driver.get("https://stellarburgers.nomoreparties.site/")
+        # Ввод email
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.EMAIL_INPUT)
+        ).send_keys("testuser199@yandex.ru")
 
-    # Ожидание появления и клик по кнопке "Войти в аккаунт"
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[text()='Войти в аккаунт']"))
-    ).click()
+        # Ввод пароля
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.PASSWORD_INPUT)
+        ).send_keys("password123")
 
-    # Ввод email
-    WebDriverWait(driver, 5).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/fieldset[1]/div/div//input'))
-    ).send_keys("testuser199@yandex.ru")
+        # Клик по кнопке "Войти"
+        WebDriverWait(driver, 3).until(
+            EC.element_to_be_clickable(Locators.LOGIN_BUTTON_FORM)
+        ).click()
 
-    # Ввод пароля
-    WebDriverWait(driver, 5).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/fieldset[2]/div/div//input'))
-    ).send_keys("password123")
+        # Проверка успешного входа: проверяем наличие кнопки "Оформить заказ"
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.ORDER_BUTTON)
+        )
+    finally:
+        driver.quit()
 
-    # Клик по кнопке "Войти"
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, '/html/body/div/div/main/div/form/button'))
-    ).click()
+def test_login_from_account_page():
+    driver = webdriver.Chrome()
+    try:
+        # Переход на главную страницу
+        driver.get("https://stellarburgers.nomoreparties.site/")
 
-    # Проверка успешного входа: проверяем наличие кнопки "Оформить заказ"
-    WebDriverWait(driver, 5).until(
-        EC.visibility_of_element_located((By.XPATH, "//button[text()='Оформить заказ']"))
-    )
+        # Ожидание появления и клик по кнопке "Личный кабинет"
+        WebDriverWait(driver, 3).until(
+            EC.element_to_be_clickable(Locators.PERSONAL_ACCOUNT_BUTTON)
+        ).click()
 
+        # Ввод email
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.EMAIL_INPUT)
+        ).send_keys("testuser199@yandex.ru")
 
-def test_login_from_account_page(driver):
-    # Переход на главную страницу
-    driver.get("https://stellarburgers.nomoreparties.site/")
+        # Ввод пароля
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.PASSWORD_INPUT)
+        ).send_keys("password123")
 
-    # Ожидание появления и клик по кнопке "Личный кабинет"
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, '/html/body/div/div/header/nav/a/p'))
-    ).click()
+        # Клик по кнопке "Войти"
+        WebDriverWait(driver, 3).until(
+            EC.element_to_be_clickable(Locators.LOGIN_BUTTON_FORM)
+        ).click()
 
-    # Ввод email
-    WebDriverWait(driver, 5).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/fieldset[1]/div/div//input'))
-    ).send_keys("testuser199@yandex.ru")
+        # Проверка успешного входа: проверяем наличие кнопки "Оформить заказ"
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.ORDER_BUTTON)
+        )
+    finally:
+        driver.quit()
 
-    # Ввод пароля
-    WebDriverWait(driver, 5).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/fieldset[2]/div/div//input'))
-    ).send_keys("password123")
+def test_login_from_registration_page():
+    driver = webdriver.Chrome()
+    try:
+        # Переход на страницу регистрации
+        driver.get("https://stellarburgers.nomoreparties.site/register")
 
-    # Клик по кнопке "Войти"
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[text()='Войти']"))
-    ).click()
+        # Ожидание появления и клик по кнопке "Войти" на странице регистрации
+        WebDriverWait(driver, 3).until(
+            EC.element_to_be_clickable(Locators.LOGIN_LINK_TEXT)
+        ).click()
 
-    # Проверка успешного входа: проверяем наличие кнопки "Оформить заказ"
-    WebDriverWait(driver, 8).until(
-        EC.visibility_of_element_located((By.XPATH, "//button[text()='Оформить заказ']"))
-    )
+        # Ввод email
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.EMAIL_INPUT)
+        ).send_keys("testuser199@yandex.ru")
 
+        # Ввод пароля
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.PASSWORD_INPUT)
+        ).send_keys("password123")
 
-def test_login_from_registration_page(driver):
-    # Переход на страницу регистрации
-    driver.get("https://stellarburgers.nomoreparties.site/register")
+        # Клик по кнопке "Войти"
+        WebDriverWait(driver, 3).until(
+            EC.element_to_be_clickable(Locators.LOGIN_BUTTON_FORM)
+        ).click()
 
-    # Ожидание появления и клик по кнопке "Войти" на странице регистрации
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.LINK_TEXT, "Войти"))
-    ).click()
+        # Проверка успешного входа: проверяем наличие кнопки "Оформить заказ"
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.ORDER_BUTTON)
+        )
+    finally:
+        driver.quit()
 
-    # Ввод email
-    WebDriverWait(driver, 5).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/fieldset[1]/div/div//input'))
-    ).send_keys("testuser199@yandex.ru")
+def test_login_from_password_recovery_page():
+    driver = webdriver.Chrome()
+    try:
+        # Переход на страницу восстановления пароля
+        driver.get("https://stellarburgers.nomoreparties.site/forgot-password")
 
-    # Ввод пароля
-    WebDriverWait(driver, 5).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/fieldset[2]/div/div//input'))
-    ).send_keys("password123")
+        # Ожидание появления и клик по кнопке "Войти" на странице восстановления пароля
+        WebDriverWait(driver, 3).until(
+            EC.element_to_be_clickable(Locators.LOGIN_LINK_TEXT)
+        ).click()
 
-    # Клик по кнопке "Войти"
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[text()='Войти']"))
-    ).click()
+        # Ввод email
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.EMAIL_INPUT)
+        ).send_keys("testuser199@yandex.ru")
 
-    # Проверка успешного входа: проверяем наличие кнопки "Оформить заказ"
-    WebDriverWait(driver, 8).until(
-        EC.visibility_of_element_located((By.XPATH, "//button[text()='Оформить заказ']"))
-    )
+        # Ввод пароля
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.PASSWORD_INPUT)
+        ).send_keys("password123")
 
-def test_login_from_password_recovery_page(driver):
-    # Переход на страницу восстановления пароля
-    driver.get("https://stellarburgers.nomoreparties.site/forgot-password")
+        # Клик по кнопке "Войти"
+        WebDriverWait(driver, 3).until(
+            EC.element_to_be_clickable(Locators.LOGIN_BUTTON_FORM)
+        ).click()
 
-    # Ожидание появления и клик по кнопке "Войти" на странице восстановления пароля
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.LINK_TEXT, "Войти"))
-    ).click()
-
-    # Ввод email
-    WebDriverWait(driver, 5).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/fieldset[1]/div/div//input'))
-    ).send_keys("testuser199@yandex.ru")
-
-    # Ввод пароля
-    WebDriverWait(driver, 5).until(
-        EC.visibility_of_element_located((By.XPATH, '/html/body/div/div/main/div/form/fieldset[2]/div/div//input'))
-    ).send_keys("password123")
-
-    # Клик по кнопке "Войти"
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[text()='Войти']"))
-    ).click()
-
-    # Проверка успешного входа: проверяем наличие кнопки "Оформить заказ"
-    WebDriverWait(driver, 8).until(
-        EC.visibility_of_element_located((By.XPATH, "//button[text()='Оформить заказ']"))
-    )
+        # Проверка успешного входа: проверяем наличие кнопки "Оформить заказ"
+        WebDriverWait(driver, 3).until(
+            EC.visibility_of_element_located(Locators.ORDER_BUTTON)
+        )
+    finally:
+        driver.quit()
 
