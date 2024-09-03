@@ -8,8 +8,11 @@ def session_driver():
     yield driver
     driver.quit()
 
+
 @pytest.fixture
 def driver():
     driver = webdriver.Chrome()
     yield driver
     driver.quit()
+
+

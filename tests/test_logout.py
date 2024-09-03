@@ -5,6 +5,7 @@ from locators import Locators
 
 def test_go_to_personal_account(driver):
     # Переход на главную страницу
+
     driver.get("https://stellarburgers.nomoreparties.site/")
 
     # Ожидание появления и клик по кнопке "Войти в аккаунт"
